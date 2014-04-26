@@ -62,5 +62,9 @@ func TestInitPieces(t *testing.T) {
 		if i > 15 && p.Player != PlayerOne {
 			t.Errorf("Piece numbers above 15 belong to player one")
 		}
+
+		if p.Location != initialLocations[i] {
+			t.Errorf("Piece %d has incorrect initial location", i, p)
+		}
 	}
 }
