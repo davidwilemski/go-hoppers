@@ -44,11 +44,27 @@ type Piece struct {
 // Board contains complete state for a game of Hoppers
 type Board struct {
 	CurrentTurn string
+	Pieces      map[int32]Piece
+}
+
+func initPieces() map[int32]Piece {
+	pieces := make(map[int32]Piece)
+	for i, k := range initialLocations {
+
+		player := PlayerOne
+		if i < 16 {
+			player = PlayerTwo
+		}
+
+		pieces[i] = Piece{Num: i, Location: k, Player: player}
+	}
+	return pieces
 }
 
 // NewBoard returns an initialized instance of the Board struct
 func NewBoard() Board {
 	return Board{
 		CurrentTurn: PlayerOne,
+		Pieces:      initPieces(),
 	}
 }
