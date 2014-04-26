@@ -42,6 +42,10 @@ func TestInitPieces(t *testing.T) {
 		t.Errorf("Too many Pieces in game state", pieces)
 	}
 
+	if len(pieces) != 30 {
+		t.Errorf("Initial game state must have 30 pieces", pieces)
+	}
+
 	for i, p := range pieces {
 		if p.Player == "" || p.Num == 0 {
 			t.Errorf("Piece %d is not initialized", i, p)

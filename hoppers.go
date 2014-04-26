@@ -10,8 +10,38 @@ const (
 	PlayerTwo = "two"
 )
 
+// Map of piece numbers to initial board locations
 var initialLocations = map[int32]Location{
-	1: Location{Row: 1, Col: 1},
+	1:  Location{Row: 1, Col: 1},
+	2:  Location{Row: 1, Col: 2},
+	3:  Location{Row: 1, Col: 3},
+	4:  Location{Row: 1, Col: 4},
+	5:  Location{Row: 1, Col: 5},
+	6:  Location{Row: 2, Col: 1},
+	7:  Location{Row: 2, Col: 2},
+	8:  Location{Row: 2, Col: 3},
+	9:  Location{Row: 2, Col: 4},
+	10: Location{Row: 3, Col: 1},
+	11: Location{Row: 3, Col: 2},
+	12: Location{Row: 3, Col: 3},
+	13: Location{Row: 4, Col: 4},
+	14: Location{Row: 4, Col: 4},
+	15: Location{Row: 5, Col: 5},
+	16: Location{Row: 6, Col: 6},
+	17: Location{Row: 7, Col: 7},
+	18: Location{Row: 7, Col: 7},
+	19: Location{Row: 8, Col: 8},
+	20: Location{Row: 8, Col: 8},
+	21: Location{Row: 8, Col: 8},
+	22: Location{Row: 9, Col: 9},
+	23: Location{Row: 9, Col: 9},
+	24: Location{Row: 9, Col: 9},
+	25: Location{Row: 9, Col: 9},
+	26: Location{Row: 10, Col: 10},
+	27: Location{Row: 10, Col: 10},
+	28: Location{Row: 10, Col: 10},
+	29: Location{Row: 10, Col: 10},
+	30: Location{Row: 10, Col: 10},
 }
 
 // Location contains coordinates for a game board
