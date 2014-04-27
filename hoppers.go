@@ -11,7 +11,7 @@ const (
 )
 
 // Map of piece numbers to initial board locations
-var initialLocations = map[int32]Location{
+var initialLocations = map[int]Location{
 	1:  Location{Row: 1, Col: 1},
 	2:  Location{Row: 1, Col: 2},
 	3:  Location{Row: 1, Col: 3},
@@ -24,34 +24,34 @@ var initialLocations = map[int32]Location{
 	10: Location{Row: 3, Col: 1},
 	11: Location{Row: 3, Col: 2},
 	12: Location{Row: 3, Col: 3},
-	13: Location{Row: 4, Col: 4},
-	14: Location{Row: 4, Col: 4},
-	15: Location{Row: 5, Col: 5},
-	16: Location{Row: 6, Col: 6},
-	17: Location{Row: 7, Col: 7},
-	18: Location{Row: 7, Col: 7},
+	13: Location{Row: 4, Col: 1},
+	14: Location{Row: 4, Col: 2},
+	15: Location{Row: 5, Col: 1},
+	16: Location{Row: 6, Col: 10},
+	17: Location{Row: 7, Col: 9},
+	18: Location{Row: 7, Col: 10},
 	19: Location{Row: 8, Col: 8},
-	20: Location{Row: 8, Col: 8},
-	21: Location{Row: 8, Col: 8},
-	22: Location{Row: 9, Col: 9},
-	23: Location{Row: 9, Col: 9},
+	20: Location{Row: 8, Col: 9},
+	21: Location{Row: 8, Col: 10},
+	22: Location{Row: 9, Col: 7},
+	23: Location{Row: 9, Col: 8},
 	24: Location{Row: 9, Col: 9},
-	25: Location{Row: 9, Col: 9},
-	26: Location{Row: 10, Col: 10},
-	27: Location{Row: 10, Col: 10},
-	28: Location{Row: 10, Col: 10},
-	29: Location{Row: 10, Col: 10},
+	25: Location{Row: 9, Col: 10},
+	26: Location{Row: 10, Col: 6},
+	27: Location{Row: 10, Col: 7},
+	28: Location{Row: 10, Col: 8},
+	29: Location{Row: 10, Col: 9},
 	30: Location{Row: 10, Col: 10},
 }
 
 // Location contains coordinates for a game board
 type Location struct {
-	Row int32
-	Col int32
+	Row int
+	Col int
 }
 
 // NewLocation instantiates a Location struct after performing bounds checks
-func NewLocation(row int32, col int32) (l Location, err error) {
+func NewLocation(row int, col int) (l Location, err error) {
 	if row <= 0 || row > 30 {
 		err = errors.New("hoppers: row value is out of bounds")
 	}
@@ -67,18 +67,19 @@ func NewLocation(row int32, col int32) (l Location, err error) {
 // Piece contains state for a single piece that is on the game board
 type Piece struct {
 	Player   string
-	Num      int32
+	Num      int
 	Location Location
 }
 
 // Board contains complete state for a game of Hoppers
 type Board struct {
 	CurrentTurn string
-	Pieces      map[int32]Piece
+	Pieces      map[int]Piece
+	Spaces      map[Location]int
 }
 
-func initPieces() map[int32]Piece {
-	pieces := make(map[int32]Piece)
+func initPieces() map[int]Piece {
+	pieces := make(map[int]Piece)
 	for i, k := range initialLocations {
 
 		player := PlayerOne
@@ -91,10 +92,28 @@ func initPieces() map[int32]Piece {
 	return pieces
 }
 
-// NewBoard returns an initialized instance of the Board struct
-func NewBoard() Board {
-	return Board{
-		CurrentTurn: PlayerOne,
-		Pieces:      initPieces(),
+func initSpaces() (spaces map[Location]int) {
+	spaces = make(map[Location]int)
+	for i := 1; i <= 10; i++ {
+		for j := 1; j <= 10; j++ {
+			loc, _ := NewLocation(i, j)
+			spaces[loc] = 0
+		}
 	}
+	return
+}
+
+// NewBoard returns an initialized instance of the Board struct
+func NewBoard() (board Board) {
+	board = Board{
+		CurrentTurn: PlayerOne, // default to player one
+		Pieces:      initPieces(),
+		Spaces:      initSpaces(), // create all nessecary tiles and zero them
+	}
+
+	for _, p := range board.Pieces {
+		board.Spaces[p.Location] = p.Num
+	}
+
+	return
 }
