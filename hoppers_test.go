@@ -102,6 +102,18 @@ func TestMoveNotCorrectTurn(t *testing.T) {
 	err := board.Move(move)
 
 	if err == nil {
+		t.Errorf("Move() should reject incorrect player turn")
+	}
+
+}
+
+func TestMoveTooFar(t *testing.T) {
+	board := NewBoard()
+	move := Move{Player: PlayerOne, Piece: 26, Path: []Location{Location{7, 7}}}
+
+	err := board.Move(move)
+
+	if err == nil {
 		t.Errorf("Move() should reject jump giant moves across the board")
 	}
 

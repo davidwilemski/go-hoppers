@@ -172,7 +172,7 @@ func (b Board) checkMoves(m Move) error {
 		}
 
 		if prev.Row-l.Row > 2 || prev.Col-l.Col > 2 {
-			errors.New("piece must move a single space or complete a hop")
+			return errors.New("piece must move a single space or complete a hop")
 		}
 	}
 
