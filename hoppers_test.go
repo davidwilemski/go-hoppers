@@ -97,12 +97,29 @@ func TestInitSpaces(t *testing.T) {
 
 func TestMoveNotCorrectTurn(t *testing.T) {
 	board := NewBoard()
-	move := Move{Player: PlayerOne, Piece: 16, Path: []Location{Location{7, 7}}}
+	move := Move{Player: PlayerTwo, Piece: 16, Path: []Location{Location{7, 7}}}
 
 	err := board.Move(move)
 
-	if err != nil {
+	if err == nil {
 		t.Errorf("Move() should reject jump giant moves across the board")
 	}
 
+}
+
+func TestMovePieceOutOfRange(t *testing.T) {
+	board := NewBoard()
+	move := Move{Player: PlayerOne, Piece: 31, Path: []Location{Location{7, 7}}}
+	err := board.Move(move)
+
+	if err == nil {
+		t.Errorf("Move() should reject invalid Piece numbers")
+	}
+
+	move = Move{Player: PlayerOne, Piece: 0, Path: []Location{Location{7, 7}}}
+	err = board.Move(move)
+
+	if err == nil {
+		t.Errorf("Move() should reject invalid Piece numbers")
+	}
 }
