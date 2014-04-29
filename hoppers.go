@@ -64,7 +64,7 @@ func NewLocation(row int, col int) (l Location, err error) {
 	return
 }
 
-func (l Location) DistanceRow(l2 Location) int {
+func (l Location) distanceRow(l2 Location) int {
 	dist := l.Row - l2.Row
 	if dist < 0 {
 		dist *= -1
@@ -72,7 +72,7 @@ func (l Location) DistanceRow(l2 Location) int {
 	return dist
 }
 
-func (l Location) DistanceCol(l2 Location) int {
+func (l Location) distanceCol(l2 Location) int {
 	dist := l.Col - l2.Col
 	if dist < 0 {
 		dist *= -1
@@ -80,9 +80,10 @@ func (l Location) DistanceCol(l2 Location) int {
 	return dist
 }
 
+// Distance returns the row and column distances between two locations
 func (l Location) Distance(l2 Location) (row, col int) {
-	row = l.DistanceRow(l2)
-	col = l.DistanceCol(l2)
+	row = l.distanceRow(l2)
+	col = l.distanceCol(l2)
 	return
 }
 
