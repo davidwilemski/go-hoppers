@@ -128,6 +128,7 @@ func TestMovePieceOutOfRange(t *testing.T) {
 		t.Errorf("Move() should reject invalid Piece numbers")
 	}
 
+	board.CurrentTurn = PlayerTwo
 	move = Move{Player: PlayerOne, Piece: 0, Path: []Location{Location{7, 7}}}
 	err = board.Move(move)
 
@@ -144,5 +145,34 @@ func TestMovePieceGameWon(t *testing.T) {
 
 	if err == nil {
 		t.Errorf("Move() should reject moves after a player has won")
+	}
+}
+
+func TestPlayerMovesOtherPlayerPiece(t *testing.T) {
+	board := NewBoard()
+	move := Move{Player: PlayerOne, Piece: 5, Path: []Location{Location{1, 6}}}
+	err := board.Move(move)
+
+	if err == nil {
+		t.Errorf("Move() should reject attempts to move the other player's pieces")
+	}
+
+}
+
+func TestValidMove(t *testing.T) {
+	board := NewBoard()
+	move := Move{Player: PlayerOne, Piece: 26, Path: []Location{Location{10, 5}}}
+	err := board.Move(move)
+
+	if err != nil {
+		t.Errorf("Move() should accept valid moves", err)
+	}
+
+	if board.Pieces[26].Location != move.Path[0] {
+		t.Errorf("Move() not updating piece positions correctly")
+	}
+
+	if board.Spaces[move.Path[0]] != move.Piece || board.Spaces[initialLocations[26]] != 0 {
+		t.Errorf("Move() not updating space positions correctly")
 	}
 }
