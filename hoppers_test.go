@@ -135,3 +135,14 @@ func TestMovePieceOutOfRange(t *testing.T) {
 		t.Errorf("Move() should reject invalid Piece numbers")
 	}
 }
+
+func TestMovePieceGameWon(t *testing.T) {
+	board := NewBoard()
+	board.Winner = PlayerOne
+	move := Move{Player: PlayerOne, Piece: 26, Path: []Location{Location{10, 5}}}
+	err := board.Move(move)
+
+	if err == nil {
+		t.Errorf("Move() should reject moves after a player has won")
+	}
+}
