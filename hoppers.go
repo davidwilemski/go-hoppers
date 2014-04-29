@@ -64,6 +64,28 @@ func NewLocation(row int, col int) (l Location, err error) {
 	return
 }
 
+func (l Location) DistanceRow(l2 Location) int {
+	dist := l.Row - l2.Row
+	if dist < 0 {
+		dist *= -1
+	}
+	return dist
+}
+
+func (l Location) DistanceCol(l2 Location) int {
+	dist := l.Col - l2.Col
+	if dist < 0 {
+		dist *= -1
+	}
+	return dist
+}
+
+func (l Location) Distance(l2 Location) (row, col int) {
+	row = l.DistanceRow(l2)
+	col = l.DistanceCol(l2)
+	return
+}
+
 // Piece contains state for a single piece that is on the game board
 type Piece struct {
 	Player   string
@@ -76,6 +98,7 @@ type Board struct {
 	CurrentTurn string
 	Pieces      map[int]Piece
 	Spaces      map[Location]int
+	Winner      string
 }
 
 func initPieces() map[int]Piece {
@@ -109,6 +132,7 @@ func NewBoard() (board Board) {
 		CurrentTurn: PlayerOne, // default to player one
 		Pieces:      initPieces(),
 		Spaces:      initSpaces(), // create all nessecary tiles and zero them
+		Winner:      "",
 	}
 
 	for _, p := range board.Pieces {
@@ -116,4 +140,66 @@ func NewBoard() (board Board) {
 	}
 
 	return
+}
+
+// A Move struct contains any relevant state needed to validate and performa move on a piece
+type Move struct {
+	Player string
+	Piece  int
+	Path   []Location
+}
+
+/*func NewMove*/
+
+// returns an error if the move is not legal according to hopper's rules
+func (b Board) checkMoves(m Move) error {
+	if len(m.Path) < 0 {
+		return errors.New("path must contain at least one move")
+	}
+
+	for i, l := range m.Path {
+		if i == 0 && l == b.Pieces[m.Piece].Location {
+			return errors.New("path may not repeat locations sequentially") // bad description
+		} else if i > 0 && l == m.Path[i-1] {
+			return errors.New("path may not repeat locations sequentially") // bad description
+		}
+	}
+
+	for i, l := range m.Path {
+		prev := b.Pieces[m.Piece].Location
+		if i > 0 {
+			prev = m.Path[i-1]
+		}
+
+		if prev.Row-l.Row > 2 || prev.Col-l.Col > 2 {
+			errors.New("piece must move a single space or complete a hop")
+		}
+	}
+
+	return nil
+}
+
+// Move performs the move action given a valid Move struct
+func (b *Board) Move(m Move) error {
+	if m.Player != b.CurrentTurn {
+		return errors.New("not player's turn")
+	}
+
+	if m.Piece < 1 || m.Piece > 30 {
+		return errors.New("invalid piece number")
+	}
+
+	if b.Winner == PlayerOne || b.Winner == PlayerTwo {
+		return errors.New("game over")
+	}
+
+	if b.Pieces[m.Piece].Player != m.Player {
+		return errors.New("the player cannot move that piece")
+	}
+
+	if err := b.checkMoves(m); err != nil {
+		return err
+	}
+
+	return nil
 }

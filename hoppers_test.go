@@ -94,3 +94,15 @@ func TestInitSpaces(t *testing.T) {
 		}
 	}
 }
+
+func TestMoveNotCorrectTurn(t *testing.T) {
+	board := NewBoard()
+	move := Move{Player: PlayerOne, Piece: 16, Path: []Location{Location{7, 7}}}
+
+	err := board.Move(move)
+
+	if err != nil {
+		t.Errorf("Move() should reject jump giant moves across the board")
+	}
+
+}
