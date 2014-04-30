@@ -176,3 +176,55 @@ func TestValidMove(t *testing.T) {
 		t.Errorf("Move() not updating space positions correctly")
 	}
 }
+
+func TestPathSingleEntryAtStartLocation(t *testing.T) {
+	board := NewBoard()
+	// Piece 26 starts at Location{10, 6}
+	move := Move{Player: PlayerOne, Piece: 26, Path: []Location{Location{10, 6}}}
+
+	err := board.Move(move)
+
+	if err == nil {
+		t.Errorf("Move() should not allow a move to repeat locations")
+	}
+}
+
+func TestEmptyPath(t *testing.T) {
+	board := NewBoard()
+	// Piece 26 starts at Location{10, 6}
+	move := Move{Player: PlayerOne, Piece: 26, Path: []Location{}}
+
+	err := board.Move(move)
+
+	if err == nil {
+		t.Errorf("Move() should not allow an empty Move.Path")
+	}
+}
+
+func TestOutOfBoundsPaths(t *testing.T) {
+	board := NewBoard()
+
+	// XXX: this is meant to test invalid location checking
+	// therefore that check must happen before hop logic checks
+	paths := [][]Location{
+		[]Location{Location{0, 1}},
+		[]Location{Location{-1, 1}},
+		[]Location{Location{11, 1}},
+		[]Location{Location{1, 0}},
+		[]Location{Location{1, -1}},
+		[]Location{Location{1, 11}},
+		[]Location{Location{0, 0}},
+		[]Location{Location{-1, -1}},
+		[]Location{Location{11, 11}},
+	}
+
+	for _, path := range paths {
+		// Piece 26 starts at Location{10, 6}
+		move := Move{Player: PlayerOne, Piece: 26, Path: path}
+		err := board.Move(move)
+
+		if err == nil {
+			t.Errorf("Move() should not allow an empty Move.Path", path)
+		}
+	}
+}

@@ -150,30 +150,33 @@ type Move struct {
 	Path   []Location
 }
 
-/*func NewMove*/
-
 // returns an error if the move is not legal according to hopper's rules
 func (b Board) checkMoves(m Move) error {
-	if len(m.Path) < 0 {
+	if len(m.Path) < 1 {
 		return errors.New("path must contain at least one move")
 	}
 
 	for i, l := range m.Path {
-		if i == 0 && l == b.Pieces[m.Piece].Location {
-			return errors.New("path may not repeat locations sequentially") // bad description
-		} else if i > 0 && l == m.Path[i-1] {
-			return errors.New("path may not repeat locations sequentially") // bad description
+		if l.Row > 10 || l.Col > 10 || l.Row < 1 || l.Col < 1 {
+			return errors.New("path has a location that is not valid")
 		}
-	}
 
-	for i, l := range m.Path {
 		prev := b.Pieces[m.Piece].Location
 		if i > 0 {
 			prev = m.Path[i-1]
 		}
 
-		if prev.Row-l.Row > 2 || prev.Col-l.Col > 2 {
+		if l == prev {
+			return errors.New("path may not repeat locations sequentially") // bad description
+		}
+
+		dist_row, dist_col := prev.Distance(l)
+		if dist_row > 2 || dist_col > 2 {
 			return errors.New("piece must move a single space or complete a hop")
+		}
+
+		if len(m.Path) > 1 && (dist_row < 2 && dist_col < 2) {
+			return errors.New("A multiple location move must be all hops over a piece")
 		}
 	}
 
