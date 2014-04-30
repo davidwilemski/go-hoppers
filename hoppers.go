@@ -205,12 +205,8 @@ func (b *Board) Move(m Move) error {
 		return err
 	}
 
-	p, ok := b.Pieces[m.Piece]
+	p := b.Pieces[m.Piece]
 	newloc := m.Path[len(m.Path)-1]
-
-	if !ok {
-		return errors.New("invalid piece number")
-	}
 
 	b.Spaces[p.Location] = 0   // invalidate old location
 	b.Spaces[newloc] = m.Piece // set new location
