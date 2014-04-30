@@ -228,3 +228,18 @@ func TestOutOfBoundsPaths(t *testing.T) {
 		}
 	}
 }
+
+func TestInvalidMoveMultipleSingleSpaceMoves(t *testing.T) {
+	path := []Location{
+		Location{10, 5},
+		Location{10, 4},
+	}
+
+	board := NewBoard()
+	move := Move{Player: PlayerOne, Piece: 26, Path: path}
+	err := board.Move(move)
+
+	if err == nil {
+		t.Errorf("Move() should not allow multiple single space moves", path)
+	}
+}
